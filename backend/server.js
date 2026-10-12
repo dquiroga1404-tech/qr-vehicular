@@ -136,6 +136,8 @@ app.get('/api/vehiculos/:id', verificarToken, async (req, res) => {
 });
 
 // Crear vehículo
+console.log('📥 Datos recibidos:', req.body);
+console.log('🔑 mecanico_id recibido:', req.body.mecanico_id, 'tipo:', typeof req.body.mecanico_id);
 app.post('/api/vehiculos', verificarToken, async (req, res) => {
     const { placa, tipo_vehiculo, marca, modelo, año, color, mecanico_id } = req.body;
     

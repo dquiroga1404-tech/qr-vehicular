@@ -70,7 +70,7 @@ document.getElementById('vehicleForm').addEventListener('submit', async (e) => {
     const vehiculoData = {
         placa: document.getElementById('placa').value.trim().toUpperCase(),
         tipo_vehiculo: document.getElementById('tipoVehiculo').value,
-        mecanico_id: parseInt(document.getElementById('mecanico').value),
+        mecanico_id: document.getElementById('mecanico').value,
         marca: document.getElementById('marca').value.trim(),
         modelo: document.getElementById('modelo').value.trim(),
         año: document.getElementById('año').value ? parseInt(document.getElementById('año').value) : null,
@@ -116,7 +116,7 @@ async function cargarMecanicos() {
             
             mecanicos.forEach(mecanico => {
                 const option = document.createElement('option');
-                option.value = mecanico.id;
+                option.value = String(mecanico.id);
                 option.textContent = mecanico.nombre;
                 select.appendChild(option);
             });
