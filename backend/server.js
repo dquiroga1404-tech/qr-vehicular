@@ -52,7 +52,38 @@ pool.connect((err, client, release) => {
     }
 });
 
-// ===== RUTAS =====
+// Ruta informativa del API
+app.get('/api', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'API QR Vehicular - Servicio activo',
+        version: '1.0.0',
+        endpoints: {
+            health: '/api/health',
+            mecanicos: '/api/mecanicos',
+            vehiculos: '/api/vehiculos',
+            auth: {
+                register: 'POST /api/auth/register',
+                login: 'POST /api/auth/login',
+                recuperar: 'POST /api/auth/recuperar-password',
+                restablecer: 'POST /api/auth/restablecer-password'
+            },
+            reportes: {
+                pdf: '/api/reportes/vehiculos/pdf',
+                excel: '/api/reportes/vehiculos/excel'
+            }
+        }
+    });
+});
+
+// Ruta raíz
+app.get('/', (req, res) => {
+    res.json({
+        status: 'OK',
+        message: 'QR Vehicular API - Servicio activo',
+        api: '/api'
+    });
+});
 
 // Health Check
 app.get('/api/health', (req, res) => {
