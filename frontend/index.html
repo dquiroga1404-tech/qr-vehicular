@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Vehicular</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Verificar autenticación -->
+    <script>
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login.html';
+        }
+    </script>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <h1>🚗 QR Vehicular</h1>
+                <div class="user-info">
+                    <span id="userName">👤 Usuario</span>
+                    <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+                </div>
+            </div>
+            <p>Registro y seguimiento de vehículos con CockroachDB</p>
+        </div>
+
+        <!-- Contenido Principal -->
+        <div class="main-content">
+            <!-- Formulario -->
+            <div class="form-section">
+                <h2>📋 Registrar Vehículo</h2>
+                <form id="vehicleForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="placa">Placa del Vehículo *</label>
+                            <input type="text" id="placa" required placeholder="ABC-123">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tipoVehiculo">Tipo de Vehículo *</label>
+                            <select id="tipoVehiculo" required>
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="Sedán">Sedán</option>
+                                <option value="SUV">SUV</option>
+                                <option value="Camioneta">Camioneta</option>
+                                <option value="Deportivo">Deportivo</option>
+                                <option value="Motocicleta">Motocicleta</option>
+                                <option value="Camión">Camión</option>
+                                <option value="Van">Van</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mecanico">Mecánico Responsable *</label>
+                            <select id="mecanico" required>
+                                <option value="">Cargando mecánicos...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="marca">Marca</label>
+                            <input type="text" id="marca" placeholder="Toyota, Ford, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="modelo">Modelo</label>
+                            <input type="text" id="modelo" placeholder="Corolla, F-150, etc.">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="año">Año</label>
+                            <input type="number" id="año" min="1950" max="2026" placeholder="2024">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="color">Color</label>
+                            <input type="text" id="color" placeholder="Rojo, Azul, etc.">
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Registrar Vehículo</button>
+                        <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Estadísticas -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Total Vehículos</h3>
+                    <p id="totalVehiculos">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Mecánicos Activos</h3>
+                    <p id="totalMecanicos">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Registros Hoy</h3>
+                    <p id="registrosHoy">0</p>
+                </div>
+            </div>
+
+            <!-- Reportes -->
+            <div class="reportes-section">
+                <h2>📄 Generar Reportes</h2>
+                <p class="reportes-desc">Descarga los reportes de vehículos registrados en el sistema.</p>
+                <div class="reportes-buttons">
+                    <button class="btn btn-pdf" onclick="descargarReporte('pdf')">
+                        📕 Descargar PDF
+                    </button>
+                    <button class="btn btn-excel" onclick="descargarReporte('excel')">
+                        📗 Descargar Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de Vehículos -->
+            <div class="vehicles-list">
+                <h2>🚙 Vehículos Registrados</h2>
+                <div class="table-responsive" id="vehiclesTableContainer">
+                    <div class="loading">Cargando vehículos...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Modal QR -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content">
+            <h3>🔍 Información del Vehículo</h3>
+            <div id="qrCode"></div>
+            <p id="qrVehicleInfo"></p>
+            <button class="btn btn-primary" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
