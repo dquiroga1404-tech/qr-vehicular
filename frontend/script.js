@@ -1,5 +1,5 @@
 // ===== CONFIGURACIÓN =====
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://qr-vehicular.onrender.com/api';
 
 // ===== ESTADO GLOBAL =====
 let vehiculos = [];
