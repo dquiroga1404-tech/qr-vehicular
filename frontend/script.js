@@ -348,28 +348,30 @@ window.onclick = function(event) {
     }
 }
 
-// ===== DETECTAR NAVEGACIÓN HACIA ATRÁS =====
+// ===== BLOQUEAR BOTÓN ATRÁS =====
+// Agregar una entrada ficticia al historial para interceptar el "atrás"
+history.pushState(null, null, window.location.href);
+
 window.addEventListener('popstate', function(event) {
-    // Si el usuario presiona atrás, cerrar sesión automáticamente
-    const token = localStorage.getItem('token');
+    // Cuando el usuario presiona atrás, cerrar sesión
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
     
-    if (token) {
-        // Cerrar sesión
-        localStorage.removeItem('token');
-        localStorage.removeItem('usuario');
-        
-        // Redirigir al login reemplazando la entrada actual
-        window.location.replace('login.html');
-    }
+    // Ir al login reemplazando la entrada actual
+    window.location.replace('login.html');
 });
 
-// También bloquear el botón "adelante" deshabilitando el cache
+// Bloquear el bfcache (caché del navegador) para que "adelante" no vuelva a la sesión
 window.addEventListener('pageshow', function(event) {
     if (event.persisted) {
-        // La página viene del cache (bfcache)
-        // Verificar si hay token válido, si no, redirigir
+        // La página viene del bfcache
         if (!localStorage.getItem('token')) {
             window.location.replace('login.html');
         }
     }
+});
+
+// Prevenir que el navegador guarde la página en bfcache
+window.addEventListener('beforeunload', function() {
+    // Este listener vacío fuerza al navegador a no cachear la página
 });

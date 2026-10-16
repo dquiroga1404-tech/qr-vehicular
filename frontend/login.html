@@ -109,53 +109,59 @@
     </div>
     
     <script>
-        const API_URL = 'https://qr-vehicular.onrender.com/api';
+    const API_URL = 'https://qr-vehicular.onrender.com/api';
+    
+    // Si ya hay sesión activa, redirigir
+    if (localStorage.getItem('token')) {
+        window.location.replace('index.html');
+    }
+    
+    function mostrarAlerta(mensaje, tipo = 'error') {
+        const alert = document.getElementById('alert');
+        alert.textContent = mensaje;
+        alert.className = 'alert alert-' + tipo;
+        alert.style.display = 'block';
+        setTimeout(() => { alert.style.display = 'none'; }, 5000);
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
         
-        // Si ya hay sesión activa, redirigir
-        if (localStorage.getItem('token')) {
-            window.location.replace('index.html');
+        const btn = document.getElementById('btnLogin');
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        
+        btn.disabled = true;
+        btn.textContent = 'Iniciando sesión...';
+        
+        try {
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                localStorage.setItem('token', result.data.token);
+                localStorage.setItem('usuario', JSON.stringify(result.data.usuario));
+                mostrarAlerta('¡Bienvenido! Redirigiendo...', 'success');
+                setTimeout(() => {
+                    window.location.replace('index.html');
+                }, 800);
+            } else {
+                mostrarAlerta(result.error || 'Credenciales inválidas');
+                btn.disabled = false;
+                btn.textContent = 'Iniciar Sesión';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            mostrarAlerta('Error de conexión con el servidor');
+            btn.disabled = false;
+            btn.textContent = 'Iniciar Sesión';
         }
-        
-        function mostrarAlerta(mensaje, tipo = 'error') {
-            const alert = document.getElementById('alert');
-            alert.textContent = mensaje;
-            alert.className = 'alert alert-' + tipo;
-            alert.style.display = 'block';
-            setTimeout(() => { alert.style.display = 'none'; }, 5000);
-        }
-        
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const btn = document.getElementById('btnLogin');
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            btn.disabled = true;
-            btn.textContent = 'Iniciando sesión...';
-            
-            try {
-                const response = await fetch(`${API_URL}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-             localStorage.setItem('token', result.data.token);
-             localStorage.setItem('usuario', JSON.stringify(result.data.usuario));
-             mostrarAlerta('¡Bienvenido! Redirigiendo...', 'success');
-            setTimeout(() => {
-              window.location.replace('index.html');  // ← Cambio aquí
-    }, 800);
-} else {
-    mostrarAlerta(result.error || 'Credenciales inválidas');
-    btn.disabled = false;
-    btn.textContent = 'Iniciar Sesión';
-}
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
