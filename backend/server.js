@@ -418,7 +418,7 @@ app.post('/api/auth/recuperar-password', async (req, res) => {
     from: process.env.SMTP_FROM,
     to: email,
     subject: 'Recuperación de Contraseña - QR Vehicular',
-    html: `
+    html: 
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #2c3e50;">Recuperación de Contraseña</h2>
             <p>Hola <strong>${usuario.nombre}</strong>,</p>
@@ -440,7 +440,7 @@ app.post('/api/auth/recuperar-password', async (req, res) => {
             <hr>
             <p style="color: #7f8c8d; font-size: 12px;">QR Vehicular - Sistema de Gestión Vehicular</p>
         </div>
-    `
+    
 });
         
         res.json({ success: true, message: 'Si el email existe, recibirás un correo con instrucciones' });
