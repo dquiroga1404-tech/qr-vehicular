@@ -414,28 +414,34 @@ app.post('/api/auth/recuperar-password', async (req, res) => {
         const resetUrl = `${process.env.FRONTEND_URL}/reset-password.html?token=${resetToken}`;
         
         // Enviar correo
-        await transporter.sendMail({
-            from: process.env.SMTP_FROM,
-            to: email,
-            subject: 'Recuperación de Contraseña - QR Vehicular',
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #2c3e50;">Recuperación de Contraseña</h2>
-                    <p>Hola <strong>${usuario.nombre}</strong>,</p>
-                    <p>Has solicitado restablecer tu contraseña en QR Vehicular.</p>
-                    <p>Haz click en el siguiente enlace para crear una nueva contraseña:</p>
-                    <p style="text-align: center; margin: 30px 0;">
-                        <a href="${resetUrl}" style="background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
-                            Restablecer Contraseña
-                        </a>
-                    </p>
-                    <p style="color: #e74c3c;"><strong>Este enlace expira en 30 minutos.</strong></p>
-                    <p>Si no solicitaste esto, ignora este correo.</p>
-                    <hr>
-                    <p style="color: #7f8c8d; font-size: 12px;">QR Vehicular - Sistema de Gestión Vehicular</p>
-                </div>
-            `
-        });
+      await transporter.sendMail({
+    from: process.env.SMTP_FROM,
+    to: email,
+    subject: 'Recuperación de Contraseña - QR Vehicular',
+    html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2c3e50;">Recuperación de Contraseña</h2>
+            <p>Hola <strong>${usuario.nombre}</strong>,</p>
+            <p>Has solicitado restablecer tu contraseña en QR Vehicular.</p>
+            <p>Haz click en el siguiente enlace para crear una nueva contraseña:</p>
+            <p style="text-align: center; margin: 30px 0;">
+                <a href="${resetUrl}" style="background: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">
+                    Restablecer Contraseña
+                </a>
+            </p>
+            <p style="color: #7f8c8d; font-size: 13px; margin-top: 30px;">
+                Si el botón no funciona, copia y pega esta URL en tu navegador:
+            </p>
+            <p style="background: #f8f9fa; padding: 12px; border-radius: 5px; word-break: break-all; font-size: 12px; color: #2c3e50;">
+                ${resetUrl}
+            </p>
+            <p style="color: #e74c3c;"><strong>Este enlace expira en 30 minutos.</strong></p>
+            <p>Si no solicitaste esto, ignora este correo.</p>
+            <hr>
+            <p style="color: #7f8c8d; font-size: 12px;">QR Vehicular - Sistema de Gestión Vehicular</p>
+        </div>
+    `
+});
         
         res.json({ success: true, message: 'Si el email existe, recibirás un correo con instrucciones' });
     } catch (error) {
