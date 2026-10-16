@@ -19,7 +19,7 @@ function cerrarSesion() {
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
         localStorage.removeItem('token');
         localStorage.removeItem('usuario');
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
     }
 }
 
@@ -28,7 +28,7 @@ async function fetchAuth(url, options = {}) {
     const token = getToken();
     
     if (!token) {
-        window.location.href = 'login.html';
+        window.location.replace('login.html');
         throw new Error('No hay sesión activa');
     }
     
@@ -347,3 +347,29 @@ window.onclick = function(event) {
         modal.style.display = 'none';
     }
 }
+
+// ===== DETECTAR NAVEGACIÓN HACIA ATRÁS =====
+window.addEventListener('popstate', function(event) {
+    // Si el usuario presiona atrás, cerrar sesión automáticamente
+    const token = localStorage.getItem('token');
+    
+    if (token) {
+        // Cerrar sesión
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuario');
+        
+        // Redirigir al login reemplazando la entrada actual
+        window.location.replace('login.html');
+    }
+});
+
+// También bloquear el botón "adelante" deshabilitando el cache
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        // La página viene del cache (bfcache)
+        // Verificar si hay token válido, si no, redirigir
+        if (!localStorage.getItem('token')) {
+            window.location.replace('login.html');
+        }
+    }
+});
